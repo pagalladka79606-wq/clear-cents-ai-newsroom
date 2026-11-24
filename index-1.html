@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101b32">
+<title>Clear Cents AI Newsroom</title>
+<style>
+:root{--navy:#101b32;--navy2:#172642;--gold:#d7b56d;--ink:#182338;--muted:#718096;--bg:#f4f6fa;--line:#e5eaf1;--green:#18865b;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button{font:inherit;cursor:pointer}.shell{min-height:100vh;display:grid;grid-template-columns:245px 1fr}
+.sidebar{background:var(--navy);color:#fff;padding:24px 16px;display:flex;flex-direction:column;gap:24px}
+.brand{display:flex;align-items:center;gap:11px;padding:0 8px}.mark{width:38px;height:38px;border-radius:12px;background:var(--gold);color:var(--navy);display:grid;place-items:center;font-weight:900;font-size:19px}.brand strong{display:block;letter-spacing:.08em;font-size:13px}.brand small{color:#aebbd0;font-size:10px;letter-spacing:.12em}
+.navlabel{color:#8292ad;text-transform:uppercase;font-size:10px;letter-spacing:.14em;padding:0 12px;margin-bottom:6px}.nav{display:grid;gap:5px}.nav button{border:0;background:transparent;color:#c4cede;text-align:left;padding:11px 12px;border-radius:9px;display:flex;gap:11px;align-items:center}.nav button.active,.nav button:hover{background:#243653;color:#fff}.nav .ico{width:20px;text-align:center}.side-note{margin-top:auto;border:1px solid #34445e;border-radius:12px;padding:13px;color:#c4cede;font-size:12px}.side-note b{color:#fff;display:block;margin-bottom:5px}
+main{min-width:0}.topbar{height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px}.crumb{font-size:13px;color:var(--muted)}.profile{display:flex;align-items:center;gap:10px;font-size:12px}.avatar{width:32px;height:32px;border-radius:50%;background:#e9edf4;display:grid;place-items:center;font-weight:700}
+.content{max-width:1180px;margin:auto;padding:30px}.welcome{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:24px}.eyebrow{color:var(--green);font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}.welcome h1{font-size:27px;margin:5px 0 4px;color:var(--navy)}.welcome p{margin:0;color:var(--muted);font-size:13px}.status{background:#fff8e8;border:1px solid #f1dfb8;color:#8b6927;padding:8px 12px;border-radius:30px;font-size:11px;font-weight:700;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.stat,.panel,.agent{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 2px 8px #16243a08}.stat{padding:17px}.stat-top{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.stat-icon{width:32px;height:32px;border-radius:9px;background:#f0f3f8;display:grid;place-items:center}.stat strong{display:block;font-size:25px;margin:12px 0 1px;color:var(--navy)}.stat small{color:var(--muted);font-size:11px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:27px 0 13px}.section-head h2{font-size:16px;margin:0;color:var(--navy)}.section-head span{font-size:11px;color:var(--muted)}
+.agents{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.agent{padding:15px}.agent-head{display:flex;justify-content:space-between;align-items:center}.agent-icon{width:35px;height:35px;border-radius:10px;background:#eef2f8;display:grid;place-items:center;font-size:17px}.pill{font-size:10px;color:#8b6927;background:#fff5df;border-radius:20px;padding:4px 7px}.agent h3{font-size:13px;margin:12px 0 3px}.agent p{font-size:11px;color:var(--muted);margin:0;min-height:34px}
+.columns{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-top:16px}.panel{padding:18px}.panel h2{font-size:15px;margin:0 0 5px}.panel .sub{color:var(--muted);font-size:11px;margin:0 0 15px}.workflow{display:grid;gap:10px}.step{display:flex;align-items:center;gap:10px;padding:10px;background:#f7f9fc;border-radius:9px}.stepnum{width:25px;height:25px;border-radius:8px;background:#e8edf5;display:grid;place-items:center;font-size:11px;font-weight:700}.step b{font-size:12px;display:block}.step small{font-size:10px;color:var(--muted)}.step .right{margin-left:auto;color:#8b6927;font-size:10px}
+.approval{border:1px solid #e9dfc9;background:#fffcf5;border-radius:11px;padding:13px}.approval strong{font-size:13px}.approval p{font-size:11px;color:var(--muted);margin:5px 0 12px}.btn{border:0;border-radius:8px;padding:9px 12px;background:var(--navy);color:white;font-size:11px;font-weight:700}.btn.secondary{background:#edf1f6;color:var(--navy)}.notice{margin-top:14px;padding:11px 13px;background:#f0f5fb;border-radius:9px;color:#53647e;font-size:11px}
+.page{display:none}.page.active{display:block}.empty{border:1px dashed #cbd4e1;border-radius:12px;padding:28px;text-align:center;color:var(--muted);font-size:12px}.empty b{display:block;color:var(--navy);font-size:14px;margin-bottom:5px}
+.mobilebar{display:none}
+@media(max-width:900px){.grid,.agents{grid-template-columns:repeat(2,1fr)}.shell{grid-template-columns:205px 1fr}.columns{grid-template-columns:1fr}}
+@media(max-width:620px){.shell{display:block;padding-bottom:65px}.sidebar{display:none}.topbar{height:56px;padding:0 16px}.content{padding:20px 15px}.welcome h1{font-size:22px}.welcome{display:block}.status{display:inline-block;margin-top:12px}.grid{gap:9px}.stat{padding:12px}.stat strong{font-size:21px}.agents{gap:9px}.agent{padding:12px}.mobilebar{display:flex;position:fixed;bottom:0;left:0;right:0;height:62px;background:#101b32;justify-content:space-around;align-items:center;z-index:5}.mobilebar button{border:0;background:none;color:#c4cede;font-size:10px;display:grid;gap:2px;justify-items:center}.mobilebar button.active{color:var(--gold)}.mobilebar span{font-size:17px}.profile .profile-name{display:none}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+  <div class="brand"><div class="mark">C</div><div><strong>CLEAR CENTS</strong><small>AI NEWSROOM</small></div></div>
+  <div><div class="navlabel">Workspace</div><nav class="nav">
+    <button class="active" data-page="overview"><span class="ico">▦</span>Overview</button>
+    <button data-page="trends"><span class="ico">⌁</span>Trend Hunter</button>
+    <button data-page="articles"><span class="ico">▤</span>Article Studio</button>
+    <button data-page="agents"><span class="ico">◇</span>AI Agents</button>
+    <button data-page="updates"><span class="ico">↻</span>Update Monitor</button>
+  </nav></div>
+  <div><div class="navlabel">Administration</div><nav class="nav">
+    <button data-page="approval"><span class="ico">✓</span>Approval Queue</button>
+    <button data-page="settings"><span class="ico">⚙</span>Settings</button>
+  </nav></div>
+  <div class="side-note"><b>Editorial safety is ON</b>Nothing is published without your approval. This dashboard is currently a front-end preview.</div>
+</aside>
+<main>
+  <header class="topbar"><div class="crumb">Clear Cents Guide <span style="color:#c2cad6">/</span> <b id="crumb">Overview</b></div><div class="profile"><div class="avatar">CC</div><span class="profile-name">Editor workspace</span></div></header>
+  <div class="content">
+    <section class="page active" id="overview">
+      <div class="welcome"><div><div class="eyebrow">Editorial command center</div><h1>Good evening, Editor.</h1><p>Your finance newsroom workspace is ready for configuration.</p></div><div class="status">● Setup mode · Agents not connected</div></div>
+      <div class="grid">
+        <div class="stat"><div class="stat-top"><span>Active agents</span><span class="stat-icon">◇</span></div><strong>0 / 8</strong><small>Awaiting backend connection</small></div>
+        <div class="stat"><div class="stat-top"><span>Research topics</span><span class="stat-icon">⌁</span></div><strong>0</strong><small>No live scan has run</small></div>
+        <div class="stat"><div class="stat-top"><span>Draft articles</span><span class="stat-icon">▤</span></div><strong>0</strong><small>WordPress not connected</small></div>
+        <div class="stat"><div class="stat-top"><span>Updates due</span><span class="stat-icon">↻</span></div><strong>0</strong><small>Monitoring not configured</small></div>
+      </div>
+      <div class="section-head"><h2>Newsroom agent team</h2><span>8 specialist roles · awaiting setup</span></div>
+      <div class="agents">
+        <div class="agent"><div class="agent-head"><div class="agent-icon">⌁</div><span class="pill">Not connected</span></div><h3>Trend Hunter</h3><p>Finds timely finance topics and reader questions.</p></div>
+        <div class="agent"><div class="agent-head"><div class="agent-icon">⌕</div><span class="pill">Not connected</span></div><h3>Research Analyst</h3><p>Collects primary sources and supporting evidence.</p></div>
+        <div class="agent"><div class="agent-head"><div class="agent-icon">▥</div><span class="pill">Not connected</span></div><h3>Data Analyst</h3><p>Checks calculations, comparisons and data context.</p></div>
+        <div class="agent"><div class="agent-head"><div class="agent-icon">✎</div><span class="pill">Not connected</span></div><h3>Article Writer</h3><p>Creates clear, original reader-focused explanations.</p></div>
+        <div class="agent"><div class="agent-head"><div class="agent-icon">✓</div><span class="pill">Not connected</span></div><h3>Fact Checker</h3><p>Checks claims, dates, figures and source links.</p></div>
+        <div class="agent"><div class="agent-head"><div class="agent-icon">⌗</div><span class="pill">Not connected</span></div><h3>SEO Editor</h3><p>Reviews search intent, structure and internal links.</p></div>
+        <div class="agent"><div class="agent-head"><div class="agent-icon">▧</div><span class="pill">Not connected</span></div><h3>Visual Creator</h3><p>Plans original charts and useful illustrations.</p></div>
+        <div class="agent"><div class="agent-head"><div class="agent-icon">★</div><span class="pill">Not connected</span></div><h3>Chief Editor</h3><p>Checks completeness and editorial readiness.</p></div>
+      </div>
+      <div class="columns">
+        <div class="panel"><h2>Publishing workflow</h2><p class="sub">Every article must pass these steps.</p><div class="workflow">
+          <div class="step"><div class="stepnum">1</div><div><b>Discover & research</b><small>Topic demand and primary sources</small></div><span class="right">Not started</span></div>
+          <div class="step"><div class="stepnum">2</div><div><b>Write & add original value</b><small>Analysis, tools, examples and visuals</small></div><span class="right">Not started</span></div>
+          <div class="step"><div class="stepnum">3</div><div><b>Verify & editorial review</b><small>Claims, dates, links and usefulness</small></div><span class="right">Not started</span></div>
+          <div class="step"><div class="stepnum">4</div><div><b>Your approval</b><small>Human review before publishing</small></div><span class="right">Required</span></div>
+        </div></div>
+        <div class="panel"><h2>Editorial control</h2><p class="sub">Publication permission</p><div class="approval"><strong>Manual approval is enabled</strong><p>The system will create WordPress drafts only. Publishing remains under your control.</p><button class="btn secondary" onclick="showPage('approval')">Open approval queue</button></div><div class="notice">No AI agents, WordPress connection, live research or scheduled jobs are active yet. They will be connected in later setup stages.</div></div>
+      </div>
+    </section>
+    <section class="page" id="trends"><div class="welcome"><div><div class="eyebrow">Discovery</div><h1>Trend Hunter</h1><p>Find finance topics worth researching before writing.</p></div></div><div class="empty"><b>No live trend scan yet</b>Trend sources and scheduled research will be connected in a later stage.</div></section>
+    <section class="page" id="articles"><div class="welcome"><div><div class="eyebrow">Content production</div><h1>Article Studio</h1><p>Research-backed drafts and original reader value.</p></div></div><div class="empty"><b>No articles created</b>Article generation will be enabled after the research and review agents are connected.</div></section>
+    <section class="page" id="agents"><div class="welcome"><div><div class="eyebrow">Operations</div><h1>AI Agents</h1><p>Eight specialist roles for the editorial workflow.</p></div></div><div class="empty"><b>Agent backend not connected</b>This page will show real agent status after backend setup.</div></section>
+    <section class="page" id="updates"><div class="welcome"><div><div class="eyebrow">Content maintenance</div><h1>Update Monitor</h1><p>Track changing figures, official guidance and outdated links.</p></div></div><div class="empty"><b>Monitoring not configured</b>We will connect WordPress and source checks before enabling monitoring.</div></section>
+    <section class="page" id="approval"><div class="welcome"><div><div class="eyebrow">Human review</div><h1>Approval Queue</h1><p>Only reviewed and approved content can be published.</p></div></div><div class="empty"><b>Your queue is empty</b>New articles will appear here after the WordPress draft workflow is connected.</div></section>
+    <section class="page" id="settings"><div class="welcome"><div><div class="eyebrow">Configuration</div><h1>Settings</h1><p>Project configuration and safety controls.</p></div></div><div class="panel"><h2>Current project settings</h2><div class="workflow"><div class="step"><div><b>Website</b><small>Clear Cents Guide · WordPress connection pending</small></div></div><div class="step"><div><b>Content strategy</b><small>Trending topics + evergreen finance guides</small></div></div><div class="step"><div><b>Budget</b><small>Free-first · no automatic paid upgrades</small></div></div><div class="step"><div><b>Publishing</b><small>Draft first · manual approval required</small></div></div></div></div></section>
+  </div>
+</main>
+</div>
+<nav class="mobilebar">
+  <button class="active" data-page="overview"><span>▦</span>Home</button>
+  <button data-page="trends"><span>⌁</span>Trends</button>
+  <button data-page="articles"><span>▤</span>Articles</button>
+  <button data-page="approval"><span>✓</span>Approve</button>
+  <button data-page="settings"><span>⚙</span>Settings</button>
+</nav>
+<script>
+function showPage(id){
+ document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
+ document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+ const names={overview:'Overview',trends:'Trend Hunter',articles:'Article Studio',agents:'AI Agents',updates:'Update Monitor',approval:'Approval Queue',settings:'Settings'};
+ document.getElementById('crumb').textContent=names[id]||'Overview';
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+</script>
+</body>
+</html>
