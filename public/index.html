@@ -180,5 +180,131 @@ function showPage(id){
 }
 document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 </script>
+const authScreen = document.getElementById("authScreen");
+const app = document.getElementById("app");
+const loginForm = document.getElementById("loginForm");
+const loginButton = document.getElementById("loginButton");
+const loginError = document.getElementById("loginError");
+const loginPassword = document.getElementById("loginPassword");
+
+function showLogin(message = "") {
+  app.hidden = true;
+  authScreen.hidden = false;
+  loginError.hidden = !message;
+  loginError.textContent = message;
+  loginPassword.value = "";
+}
+
+function showDashboard() {
+  authScreen.hidden = true;
+  app.hidden = false;
+}
+
+async function checkSession() {
+  try {
+    const response = await fetch("/api/auth/session", {
+      method: "GET",
+      credentials: "same-origin",
+      cache: "no-store"
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.authenticated === true) {
+      showDashboard();
+    } else {
+      showLogin();
+    }
+  } catch {
+    showLogin("Authentication service is unavailable.");
+  }
+}
+
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  loginButton.disabled = true;
+  loginButton.textContent = "Verifying...";
+  loginError.hidden = true;
+
+  try {
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        password: loginPassword.value
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || data.authenticated !== true) {
+      throw new Error(data.error || "Invalid login credentials.");
+    }
+
+    loginPassword.value = "";
+    await checkSession();
+
+  } catch (error) {
+    showLogin(error.message || "Login failed.");
+  } finally {
+    loginButton.disabled = false;
+    loginButton.textContent = "Secure Login";
+  }
+});
+
+document.getElementById("logoutButton").addEventListener("click", async () => {
+  try {
+    const response = await fetch("/api/auth/logout", {
+      method: "POST",
+      credentials: "same-origin"
+    });
+
+    if (!response.ok) {
+      throw new Error("Logout failed.");
+    }
+
+    showLogin("You have securely logged out.");
+  } catch {
+    alert("Could not complete logout. Please try again.");
+  }
+});
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.toggle("active", page.id === id);
+  });
+
+  document.querySelectorAll("[data-page]").forEach(button => {
+    button.classList.toggle("active", button.dataset.page === id);
+  });
+
+  const names = {
+    overview: "Overview",
+    trends: "Trend Hunter",
+    articles: "Article Studio",
+    agents: "AI Agents",
+    updates: "Update Monitor",
+    approval: "Approval Queue",
+    settings: "Settings"
+  };
+
+  document.getElementById("crumb").textContent =
+    names[id] || "Overview";
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.querySelectorAll("[data-page]").forEach(button => {
+  button.addEventListener("click", () => {
+    showPage(button.dataset.page);
+  });
+});
+
+checkSession();
+
 </body>
 </html>
