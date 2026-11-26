@@ -20,4 +20,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN_NEW }}
           accountId: ${{ secrets.CF_ACCOUNT_ID_NEW }}
-          command: deploy
+          command: deploy --verbose
