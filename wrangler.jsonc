@@ -1,4 +1,5 @@
 
+
 {
   "$schema": "https://developers.cloudflare.com/workers/wrangler/config-schema.json",
   "name": "clear-cents-ai-newsroom",
@@ -10,5 +11,10 @@
   },
   "ai": {
     "binding": "AI"
+  },
+  "triggers": {
+    "crons": [
+      "0 23 * * *"
+    ]
   }
 }
