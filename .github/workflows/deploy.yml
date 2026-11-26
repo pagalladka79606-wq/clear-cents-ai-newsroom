@@ -15,9 +15,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy to Cloudflare
+      - name: Test Cloudflare Authentication
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN_NEW }}
           accountId: ${{ secrets.CF_ACCOUNT_ID_NEW }}
-          command: deploy --verbose
+          command: whoami
+
