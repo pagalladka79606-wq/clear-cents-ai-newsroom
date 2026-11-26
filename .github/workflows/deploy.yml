@@ -32,7 +32,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID_NEW }}
 
       - name: Deploy Worker
-        run: wrangler deploy
+        run: wrangler deploy src/index.js
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN_NEW }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID_NEW }}
