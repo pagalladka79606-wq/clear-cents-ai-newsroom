@@ -1,12 +1,11 @@
 
-
 {
   "$schema": "https://developers.cloudflare.com/workers/wrangler/config-schema.json",
   "name": "clear-cents-ai-newsroom",
   "main": "src/index.js",
   "compatibility_date": "2026-11-25",
   "assets": {
-    "directory": ".",
+    "directory": "./public",
     "binding": "ASSETS"
   },
   "ai": {
