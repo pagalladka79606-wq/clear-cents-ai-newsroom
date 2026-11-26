@@ -72,6 +72,37 @@ main{min-width:0}.topbar{height:70px;background:#fff;border-bottom:1px solid var
 </style>
 </head>
 <body>
+  
+<div class="auth-screen" id="authScreen">
+  <form class="login-card" id="loginForm">
+    <div class="login-brand">
+      <div class="mark">C</div>
+      <h1>CLEAR CENTS</h1>
+      <p>AI NEWSROOM · EDITOR ACCESS</p>
+    </div>
+
+    <label for="loginPassword">Admin Password</label>
+    <input
+      id="loginPassword"
+      type="password"
+      placeholder="Enter your login password"
+      autocomplete="current-password"
+      required
+    >
+
+    <button class="login-submit" id="loginButton" type="submit">
+      Secure Login
+    </button>
+
+    <div class="login-error" id="loginError" hidden></div>
+
+    <p class="login-help">
+      Authorized editorial access only.
+      Secure server authentication required.
+    </p>
+  </form>
+</div>
+
 <div class="shell">
 <aside class="sidebar">
   <div class="brand"><div class="mark">C</div><div><strong>CLEAR CENTS</strong><small>AI NEWSROOM</small></div></div>
