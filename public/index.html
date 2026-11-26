@@ -72,7 +72,7 @@ main{min-width:0}.topbar{height:70px;background:#fff;border-bottom:1px solid var
 </style>
 </head>
 <body>
-  
+  <div class="shell" id="app" hidden>
 <div class="auth-screen" id="authScreen">
   <form class="login-card" id="loginForm">
     <div class="login-brand">
@@ -121,6 +121,9 @@ main{min-width:0}.topbar{height:70px;background:#fff;border-bottom:1px solid var
 </aside>
 <main>
   <header class="topbar"><div class="crumb">Clear Cents Guide <span style="color:#c2cad6">/</span> <b id="crumb">Overview</b></div><div class="profile"><div class="avatar">CC</div><span class="profile-name">Editor workspace</span></div></header>
+  <button class="logout-btn" id="logoutButton" type="button">
+  Logout
+</button>
   <div class="content">
     <section class="page active" id="overview">
       <div class="welcome"><div><div class="eyebrow">Editorial command center</div><h1>Good evening, Editor.</h1><p>Your finance newsroom workspace is ready for configuration.</p></div><div class="status">● Setup mode · Agents not connected</div></div>
