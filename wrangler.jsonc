@@ -4,13 +4,27 @@
   "name": "clear-cents-ai-newsroom",
   "main": "src/index.js",
   "compatibility_date": "2026-11-25",
+
   "assets": {
     "directory": "./public",
     "binding": "ASSETS"
   },
+
   "ai": {
     "binding": "AI"
   },
+
+  "ratelimits": [
+    {
+      "name": "NEWSROOM_LOGIN_LIMITER",
+      "namespace_id": "827461",
+      "simple": {
+        "limit": 5,
+        "period": 60
+      }
+    }
+  ],
+
   "triggers": {
     "crons": [
       "0 23 * * *"
