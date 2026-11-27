@@ -1,6 +1,4 @@
-
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -235,7 +233,6 @@ display:grid;gap:2px;justify-items:center
 
 <body>
 
-<!-- Login is outside the protected dashboard container -->
 <div class="auth-screen" id="authScreen">
   <form class="login-card" id="loginForm">
     <div class="login-brand">
@@ -244,23 +241,25 @@ display:grid;gap:2px;justify-items:center
       <p>AI NEWSROOM · EDITOR ACCESS</p>
     </div>
 
-<label for="loginUsername">Admin Username</label>
-<input
-  id="loginUsername"
-  type="text"
-  placeholder="Enter your username"
-  autocomplete="username"
-  required
->
+    <label for="loginUsername">Admin Username</label>
+    <input
+      id="loginUsername"
+      type="text"
+      placeholder="Enter your username"
+      autocomplete="username"
+      maxlength="128"
+      required
+    >
 
-<label for="loginPassword">Admin Password</label>
-<input
-  id="loginPassword"
-  type="password"
-  placeholder="Enter your login password"
-  autocomplete="current-password"
-  required
->
+    <label for="loginPassword">Admin Password</label>
+    <input
+      id="loginPassword"
+      type="password"
+      placeholder="Enter your login password"
+      autocomplete="current-password"
+      maxlength="1024"
+      required
+    >
 
     <button class="login-submit" id="loginButton" type="submit">
       Secure Login
@@ -275,7 +274,6 @@ display:grid;gap:2px;justify-items:center
   </form>
 </div>
 
-<!-- Dashboard and mobile navigation are hidden until session verification -->
 <div id="app" hidden>
 
 <div class="shell">
@@ -440,47 +438,65 @@ display:grid;gap:2px;justify-items:center
   <button data-page="settings"><span>⚙</span>Settings</button>
 </nav>
 
-</div><!-- End authenticated app -->
+</div>
 
 <script>
 "use strict";
 
 const authScreen = document.getElementById("authScreen");
 const app = document.getElementById("app");
+
 const loginForm = document.getElementById("loginForm");
+const loginUsername = document.getElementById("loginUsername");
+const loginPassword = document.getElementById("loginPassword");
 const loginButton = document.getElementById("loginButton");
 const loginError = document.getElementById("loginError");
-const loginPassword = document.getElementById("loginPassword");
 const logoutButton = document.getElementById("logoutButton");
+
+let authenticationReady = false;
 
 function showLogin(message = "") {
   app.hidden = true;
   authScreen.hidden = false;
+
   loginError.textContent = message;
   loginError.hidden = !message;
+
   loginPassword.value = "";
 }
 
 function showDashboard() {
   authScreen.hidden = true;
   app.hidden = false;
+  authenticationReady = true;
 }
 
+async function readResponse(response) {
+  try {
+    return await response.json();
+  } catch {
+    throw new Error("Invalid response from authentication server.");
+  }
+}
+
+/* Verify the existing server-side session */
 async function checkSession() {
   try {
-    const response = await fetch("/api/auth/session", {
+    const response = await fetch("/api/session", {
       method: "GET",
       credentials: "same-origin",
       cache: "no-store",
-      headers: {"Accept":"application/json"}
+      headers: {
+        "Accept": "application/json"
+      }
     });
 
+    const data = await readResponse(response);
+
     if (!response.ok) {
-      showLogin();
+      showLogin(data.message || "Session verification failed.");
       return false;
     }
-
-    const data = await response.json();
 
     if (data.authenticated === true) {
       showDashboard();
@@ -491,79 +507,109 @@ async function checkSession() {
     return false;
 
   } catch {
-    showLogin("Authentication service is unavailable.");
+    showLogin("Authentication service is unavailable. Please refresh.");
     return false;
   }
 }
 
+/* Username + Password login */
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+
+  const username = loginUsername.value.trim();
+  const password = loginPassword.value;
+
+  if (!username || !password) {
+    showLogin("Enter your username and password.");
+    return;
+  }
 
   loginButton.disabled = true;
   loginButton.textContent = "Verifying...";
   loginError.hidden = true;
 
   try {
-    const response = await fetch("/api/auth/login", {
+    const response = await fetch("/api/login", {
       method: "POST",
       credentials: "same-origin",
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json"
       },
       body: JSON.stringify({
-        password: loginPassword.value
+        username: username,
+        password: password
       })
     });
 
-    const data = await response.json();
+    const data = await readResponse(response);
 
     if (!response.ok || data.authenticated !== true) {
       throw new Error(
-        data.error || "Login failed. Check your credentials."
+        data.message || "Invalid username or password."
       );
     }
 
     loginPassword.value = "";
 
+    /* Confirm the server actually stored the session cookie */
     const verified = await checkSession();
 
     if (!verified) {
-      showLogin("Login session could not be verified.");
+      throw new Error(
+        "Login succeeded but session verification failed. Please retry."
+      );
     }
 
   } catch (error) {
-    showLogin(error.message || "Login failed.");
+    showLogin(error.message || "Login failed. Please try again.");
   } finally {
     loginButton.disabled = false;
     loginButton.textContent = "Secure Login";
   }
 });
 
+/* Secure server-side logout */
 logoutButton.addEventListener("click", async () => {
+  if (!authenticationReady) return;
+
   logoutButton.disabled = true;
+  logoutButton.textContent = "Logging out...";
 
   try {
-    const response = await fetch("/api/auth/logout", {
+    const response = await fetch("/api/logout", {
       method: "POST",
       credentials: "same-origin",
-      headers: {"Accept":"application/json"}
+      cache: "no-store",
+      headers: {
+        "Accept": "application/json"
+      }
     });
 
+    const data = await readResponse(response);
+
     if (!response.ok) {
-      throw new Error("Logout request failed.");
+      throw new Error(
+        data.message || "Logout request failed."
+      );
     }
 
-    showLogin("You have logged out.");
+    authenticationReady = false;
+    showLogin("You have logged out successfully.");
 
-  } catch {
-    alert("Could not complete logout. Please try again.");
+  } catch (error) {
+    alert(error.message || "Could not complete logout. Please retry.");
   } finally {
     logoutButton.disabled = false;
+    logoutButton.textContent = "Logout";
   }
 });
 
+/* Dashboard navigation */
 function showPage(id) {
+  if (!authenticationReady) return;
+
   document.querySelectorAll(".page").forEach(page => {
     page.classList.toggle("active", page.id === id);
   });
@@ -585,7 +631,10 @@ function showPage(id) {
   document.getElementById("crumb").textContent =
     names[id] || "Overview";
 
-  window.scrollTo({top:0,behavior:"smooth"});
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 }
 
 document.querySelectorAll("[data-page]").forEach(button => {
@@ -594,7 +643,7 @@ document.querySelectorAll("[data-page]").forEach(button => {
   });
 });
 
-// Verify the server session before showing the dashboard.
+/* Prevent protected dashboard from appearing before verification */
 checkSession();
 </script>
 
